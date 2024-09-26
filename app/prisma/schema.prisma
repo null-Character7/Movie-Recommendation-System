@@ -1,0 +1,84 @@
+// schema.prisma
+
+// Define the datasource and generator
+datasource db {
+  provider = "postgresql" // or your chosen database
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// User model
+model User {
+  id            Int      @id @default(autoincrement())
+  email         String   @unique
+  password      String
+  name          String?
+  profilePicture String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  ratings       Rating[]
+  reviews       Review[]
+  watchlist     Watchlist[]
+}
+
+// Movie model
+model Movie {
+  id            Int      @id @default(autoincrement())
+  title         String
+  slug          String   @unique
+  posterUrl     String
+  releaseYear   String
+  description   String?
+  genre         String?
+  cast          String?
+  ratings       Rating[]
+  reviews       Review[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  watchlists Watchlist[] @relation("UserWatchlist")
+
+}
+
+// Rating model
+model Rating {
+  id        Int    @id @default(autoincrement())
+  userId    Int
+  movieId   Int
+  rating    Int    // e.g., 1-5 stars
+  createdAt DateTime @default(now())
+
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie     Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, movieId]) // A user can rate a movie only once
+}
+
+// Review model
+model Review {
+  id        Int    @id @default(autoincrement())
+  userId    Int
+  movieId   Int
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie     Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
+}
+
+// Watchlist model
+model Watchlist {
+  id        Int    @id @default(autoincrement())
+  userId    Int
+  movieId   Int
+  createdAt DateTime @default(now())
+
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie   Movie   @relation("UserWatchlist", fields: [movieId], references: [id]) // Relation to Movie
+
+  @@unique([userId, movieId]) // A user can add a movie to their watchlist only once
+}
