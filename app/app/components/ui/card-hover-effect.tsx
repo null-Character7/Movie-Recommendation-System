@@ -10,7 +10,7 @@ export const HoverEffect = ({
   movies: {
     title: string;
     releaseYear: string;
-    cast:string;
+    cast:string | null;
     link: string;
     posterUrl: string; // Add posterUrl for movie image
   }[];

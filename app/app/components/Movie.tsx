@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -18,20 +18,91 @@ interface MovieProps {
   moviename: string;
 }
 
+interface Movie {
+  title: string;
+  genres: string;
+  overview: string;
+  posterUrl: string;
+  revenue: number;
+  runtime: number;
+  rating: number;
+  releaseYear: string;
+}
+
 export function Movie({ moviename }: MovieProps) {
   const [userRating, setUserRating] = useState(0);
   const [userReview, setUserReview] = useState("");
+  const [movie, setMovie] = useState<Movie | null>(null);
+  const [castAndCrew, setCastAndCrew] = useState({});
 
   console.log("movie name in slug in component ", moviename);
 
   const movieName = convertFromSlug(moviename);
+  useEffect(() => {
+    // Async function to fetch data
 
+    const fetchData = async () => {
+      const url = `https://moviedatabase8.p.rapidapi.com/FindByTitle/${encodeURIComponent(
+        movieName
+      )}`;
+      const options = {
+        method: "GET",
+        headers: {
+          "x-rapidapi-key":
+            "ef593792f1mshd43d0d4336fe9b8p1e8377jsn4a9fb5b802cf",
+          "x-rapidapi-host": "moviedatabase8.p.rapidapi.com",
+        },
+      };
+
+      try {
+        const response = await fetch(url, options);
+        const result = await response.json();
+        console.log(result);
+        const tconst = result[0].imdb_id;
+        setMovie({
+          title: result[0].title,
+          genres: result[0].genres,
+          overview: result[0].overview,
+          posterUrl: `${result[0].poster_path}`,
+          revenue: result[0].revenue,
+          runtime: result[0].runtime,
+          rating: result[0].vote_average,
+          releaseYear: new Date(result[0].release_date)
+            .getFullYear()
+            .toString(),
+        });
+        const castCrewUrl = `https://online-movie-database.p.rapidapi.com/title/v2/get-full-cast-and-crew?tconst=${tconst}`;
+        const castCrewOptions = {
+          method: "GET",
+          headers: {
+            "x-rapidapi-key":
+              "ef593792f1mshd43d0d4336fe9b8p1e8377jsn4a9fb5b802cf",
+            "x-rapidapi-host": "online-movie-database.p.rapidapi.com",
+          },
+        };
+
+        const castCrewResponse = await fetch(castCrewUrl, castCrewOptions);
+        const castCrewResult = await castCrewResponse.json();
+        console.log(castCrewResult);
+
+        // Set cast and crew details
+        setCastAndCrew(castCrewResult);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData(); // Call the async function
+  }, []); // Empty dependency array to run the effect only once
   return (
     <div className="min-h-screen bg-zinc-900 text-gray-100">
       {/* Movie Hero Section */}
       <section className="relative h-[70vh] overflow-hidden">
         <Image
-          src="/placeholder.svg?height=1080&width=1920&text=Movie+Poster"
+          src={
+            movie?.posterUrl ||
+            "/placeholder.svg?height=1080&width=1920&text=Movie+Poster"
+          }
           alt="Movie Poster"
           layout="fill"
           objectFit="cover"
@@ -40,8 +111,10 @@ export function Movie({ moviename }: MovieProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-8">
           <div className="container mx-auto">
-            <h1 className="text-5xl font-bold mb-4">{movieName}</h1>
-            <p className="text-xl mb-4">Sci-Fi, Adventure | 2014</p>
+            <h1 className="text-5xl font-bold mb-4">{movie?.title}</h1>
+            <p className="text-xl mb-4">
+              {movie?.genres} | {movie?.releaseYear}
+            </p>
             <div className="flex items-center space-x-4">
               <Button className="bg-purple-600 hover:bg-purple-700 transition-colors">
                 <PlusCircle className="mr-2 h-4 w-4" /> Add to Watchlist
@@ -63,10 +136,7 @@ export function Movie({ moviename }: MovieProps) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="md:col-span-2">
               <h2 className="text-3xl font-bold mb-4">Plot Summary</h2>
-              <p className="text-lg mb-8">
-                A team of explorers travel through a wormhole in space in an
-                attempt to ensure humanity's survival.
-              </p>
+              <p className="text-lg mb-8">{movie?.overview}</p>
 
               <h2 className="text-3xl font-bold mb-4">Cast & Crew</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-8">

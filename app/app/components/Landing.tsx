@@ -22,34 +22,8 @@ export function Landing() {
   const handleChange = () => {};
   const onSubmit = () => {};
   return (
-    <div className="min-h-screen bg-zinc-950 text-gray-100">
-      {/* Header */}
-      <header className="border-b border-gray-800">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-purple-500">
-            MovieMind
-          </Link>
-          <div className="flex items-center space-x-4">
-            <Link
-              href="/my-movies"
-              className="hover:text-purple-400 transition-colors"
-            >
-              My Movies
-            </Link>
-            <Button variant="ghost" size="icon">
-              <Bell className="h-5 w-5" />
-            </Button>
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <Button variant="ghost" size="icon">
-              <LogOut className="h-5 w-5" />
-            </Button>
-          </div>
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-black text-gray-100">
+      
       {/* Hero Section with Search */}
       <section className="w-[calc(100%-4rem)] h-screen mx-auto rounded-md overflow-hidden">
         <Vortex
@@ -70,21 +44,12 @@ export function Landing() {
         </Vortex>
       </section>
 
-      {/* Popular Movies */}
-      
-      <section className=" w-full rounded-md bg-neutral-950 relative flex flex-col items-center justify-center antialiased">
-        <div className="max-w-5xl mx-auto px-8">
-        <h2 className="text-3xl font-bold mb-8">Popular Movies</h2>
-          <HoverEffect movies={movies} />
-        </div>
-        <BackgroundBeams/>
-      </section>
 
       {/* Top Rated Movies */}
       <section className=" w-full rounded-md bg-neutral-950 relative flex flex-col items-center justify-center antialiased">
         <div className="max-w-5xl mx-auto px-8">
         <h2 className="text-3xl font-bold mb-8">Top Rated Movies</h2>
-          <HoverEffect movies={movies} />
+          <HoverEffect movies={topRatedMovies} />
         </div>
         <BackgroundBeams/>
       </section>
@@ -93,7 +58,7 @@ export function Landing() {
       <section className=" w-full rounded-md bg-neutral-950 relative flex flex-col items-center justify-center antialiased">
         <div className="max-w-5xl mx-auto px-8">
         <h2 className="text-3xl font-bold mb-8">Recent Movies</h2>
-          <HoverEffect movies={movies} />
+          <HoverEffect movies={recentMovies} />
         </div>
         <BackgroundBeams/>
       </section>
@@ -102,7 +67,7 @@ export function Landing() {
       <section className=" w-full rounded-md bg-neutral-950 relative flex flex-col items-center justify-center antialiased">
         <div className="max-w-5xl mx-auto px-8">
         <h2 className="text-3xl font-bold mb-8">Personalised Recomendations</h2>
-          <HoverEffect movies={movies} />
+          <HoverEffect movies={recentMovies} />
         </div>
         <BackgroundBeams/>
       </section>
@@ -117,47 +82,96 @@ export function Landing() {
   );
 }
 
-const movies = [
-    {
-        title: "Inception",
-        posterUrl: "https://images.hdqwalls.com/download/the-dark-knight-trilogy-jl-1920x1080.jpg",
-        releaseYear: "2010",
-        link: "/movies/inception",
-        cast: "Leonardo DiCaprio, Joseph Gordon-Levitt, Ellen Page, Tom Hardy",
-    },
-    {
-        title: "The Dark Knight",
-        posterUrl: "https://images.hdqwalls.com/download/the-dark-knight-trilogy-jl-1920x1080.jpg",
-        releaseYear: "2008",
-        link: "/movies/the-dark-knight",
-        cast: "Christian Bale, Heath Ledger, Aaron Eckhart, Michael Caine",
-    },
-    {
-        title: "Forrest Gump",
-        posterUrl: "https://images.hdqwalls.com/download/the-dark-knight-trilogy-jl-1920x1080.jpg",
-        releaseYear: "1994",
-        link: "/movies/forrest-gump",
-        cast: "Tom Hanks, Robin Wright, Gary Sinise, Sally Field",
-    },
-    {
-        title: "The Shawshank Redemption",
-        posterUrl: "https://images.hdqwalls.com/download/the-dark-knight-trilogy-jl-1920x1080.jpg",
-        releaseYear: "1994",
-        link: "/movies/the-shawshank-redemption",
-        cast: "Tim Robbins, Morgan Freeman, Bob Gunton, William Sadler",
-    },
-    {
-        title: "The Godfather",
-        posterUrl: "https://images.hdqwalls.com/download/the-dark-knight-trilogy-jl-1920x1080.jpg",
-        releaseYear: "1972",
-        link: "/movies/the-godfather",
-        cast: "Marlon Brando, Al Pacino, James Caan, Robert Duvall",
-    },
-    {
-        title: "Pulp Fiction",
-        posterUrl: "https://images.hdqwalls.com/download/the-dark-knight-trilogy-jl-1920x1080.jpg",
-        releaseYear: "1994",
-        link: "/movies/pulp-fiction",
-        cast: "John Travolta, Uma Thurman, Samuel L. Jackson, Bruce Willis",
-    },
+const topRatedMovies = [
+  {
+      title: "The Shawshank Redemption",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_.jpg",
+      releaseYear: "1994",
+      link: "/movies/the-shawshank-redemption",
+      cast: "Tim Robbins, Morgan Freeman, Bob Gunton, William Sadler",
+  },
+  {
+      title: "The Godfather",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BYTJkNGQyZDgtZDQ0NC00MDM0LWEzZWQtYzUzZDEwMDljZWNjXkEyXkFqcGc@._V1_.jpg",
+      releaseYear: "1972",
+      link: "/movies/the-godfather",
+      cast: "Marlon Brando, Al Pacino, James Caan, Robert Duvall",
+  },
+  {
+      title: "The Dark Knight",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg",
+      releaseYear: "2008",
+      link: "/movies/the-dark-knight",
+      cast: "Christian Bale, Heath Ledger, Aaron Eckhart, Michael Caine",
+  },
+  {
+      title: "The Godfather Part II",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BNzc1OWY5MjktZDllMi00ZDEzLWEwMGItYjk1YmRhYjBjNTVlXkEyXkFqcGc@._V1_.jpg",
+      releaseYear: "1974",
+      link: "/movies/the-godfather-part-ii",
+      cast: "Al Pacino, Robert De Niro, Robert Duvall, Diane Keaton",
+  },
+  {
+      title: "12 Angry Men",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BYjE4NzdmOTYtYjc5Yi00YzBiLWEzNDEtNTgxZGQ2MWVkN2NiXkEyXkFqcGc@._V1_.jpg",
+      releaseYear: "1957",
+      link: "/movies/12-angry-men",
+      cast: "Henry Fonda, Lee J. Cobb, Martin Balsam, John Fiedler",
+  },
+  {
+      title: "Schindler's List",
+      posterUrl: "https://m.media-amazon.com/images/M/MV5BNjM1ZDQxYWUtMzQyZS00MTE1LWJmZGYtNGUyNTdlYjM3ZmVmXkEyXkFqcGc@._V1_.jpg",
+      releaseYear: "1993",
+      link: "/movies/schindlers-list",
+      cast: "Liam Neeson, Ralph Fiennes, Ben Kingsley, Caroline Goodall",
+  },
+];
+
+const recentMovies = [
+  // Original movies
+  {
+    title: "Bohurupi",
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BN2Q4ZmI1OGYtMzhhYy00NmFkLWJlZGMtNzM0MzEwOTYyODg1XkEyXkFqcGc@._V1_.jpg",
+    releaseYear: "2024",
+    link: "/movies/bohurupi",
+    cast: null // No cast info provided in the original data
+  },
+  {
+    title: "Vicky Vidya Ka Woh Wala Video",
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BNDViYjk4ZmYtNjhhYS00OGQ0LWFlNTktZTYwMzcyZDUwODcwXkEyXkFqcGc@._V1_.jpg",
+    releaseYear: "2024",
+    link: "/movies/vicky-vidya-ka-woh-wala-video",
+    cast: "Rajkummar Rao, Triptii Dimri"
+  },
+  {
+    title: "Singham Again",
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BOWU1NGExMDEtNzU0NS00NTU1LTg5YTAtNDcyODNmYWYzNjEzXkEyXkFqcGc@._V1_.jpg",
+    releaseYear: "2024",
+    link: "/movies/singham-again",
+    cast: "Kareena Kapoor, Jackie Shroff, Ajay Devgn, Akshay Kumar, Arjun Kapoor, Deepika Padukone, Ranveer Singh, Tiger Shroff"
+  },
+  // Top three new movies
+  {
+    title: "Martin",
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BZjY3MTk3YzQtYjBhMC00N2FkLThiOTMtOWI2NmIxMDFhMDZhXkEyXkFqcGc@._V1_.jpg",
+    releaseYear: "2024",
+    link: "/movies/martin",
+    cast: null
+  },
+  {
+    title: "Vettaiyan",
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BMjExZDc1MzUtNDc3Mi00NDcxLWFmYTAtYzI2MzhlMmE3YzBiXkEyXkFqcGc@._V1_.jpg",
+    releaseYear: "2024",
+    link: "/movies/vettaiyan",
+    cast: null
+  },
+  {
+    title: "Bhool Bhulaiyaa 3",
+    posterUrl: "https://m.media-amazon.com/images/M/MV5BMjYyMTM4NjMtMjgzOS00N2RiLTlmZDUtOWJlMDZiOTVkMzA4XkEyXkFqcGc@._V1_.jpg",
+    releaseYear: "2024",
+    link: "/movies/bhool-bhulaiyaa-3",
+    cast: null
+  },
+  
+  
 ];
