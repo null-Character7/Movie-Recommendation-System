@@ -10,8 +10,12 @@ import { Vortex } from "./ui/vortex";
 import { PlaceholdersAndVanishInput } from "./ui/placholders-and-vanish-input";
 import { HoverEffect } from "./ui/card-hover-effect";
 import { BackgroundBeams } from "./ui/background-beams";
+import { useState } from "react";
+import { convertToSlug } from "../utils/movie-name";
+import { useRouter } from "next/navigation";
 
 export function Landing() {
+  const router =useRouter();
   const placeholders = [
     "Inception",
     "500 Days of Summer",
@@ -19,8 +23,23 @@ export function Landing() {
     "Iron Man",
     "The Godfather",
   ];
-  const handleChange = () => {};
-  const onSubmit = () => {};
+  const [searchMovie,setSearchMovie]=useState("");
+  // Handle input change
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchMovie(e.target.value);
+  };
+
+  // Handle form submission
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Perform the search or call an API with the searchMovie state
+    
+    let searchSlug=convertToSlug(searchMovie)
+    console.log("Searching for:", searchSlug);
+    router.push(`/movies/${searchSlug}`);
+    // You can also clear the input after submission if needed
+    setSearchMovie("");
+  };
   return (
     <div className="min-h-screen bg-black text-gray-100">
       
