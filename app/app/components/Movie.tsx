@@ -2,17 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { StarIcon, PlusCircle, PlayCircle } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import { Slider } from "@/components/ui/slider";
 import Image from "next/image";
 import { convertFromSlug } from "../utils/movie-name";
-import { BackgroundBeams } from "./ui/background-beams";
 import { HoverEffect } from "./ui/card-hover-effect";
-import { Spotlight } from "./ui/Spotlight";
-import { WobbleCard } from "./ui/wobble-card";
 
 interface MovieProps {
   moviename: string;
@@ -32,30 +28,33 @@ interface Movie {
   rating: number;
 }
 
+  // Skeleton loader components
+  interface SkeletonTextProps {
+    width?: string;
+    height?: string;
+    className?: string; // Add className as an optional property
+  }
+
+  interface SkeletonImageProps {
+    width: string;
+    height: string;
+    className?: string; // className is optional
+  }
+
 export function Movie({ moviename }: MovieProps) {
   const [userRating, setUserRating] = useState(0);
   const [userReview, setUserReview] = useState("");
   const [movie, setMovie] = useState<Movie | null>(null);
   const [cast, setCast] = useState<Cast[] | null>(null);
-  const [genres, setGenres] = useState<String | null>(null);
-  const [ttid, setttid] = useState<String | null>(null);
+  const [genres, setGenres] = useState<string | null>(null);
 
-  // Skeleton loader components
-interface SkeletonTextProps {
-  width?: string;
-  height?: string;
-  className?: string; // Add className as an optional property
-}
+
 
 const SkeletonText: React.FC<SkeletonTextProps> = ({ width = 'w-full', height = 'h-4', className = '' }) => (
   <div className={`${width} ${height} ${className} bg-gray-700 rounded animate-pulse`}></div>
 );
 
-interface SkeletonImageProps {
-  width: string;
-  height: string;
-  className?: string; // className is optional
-}
+
 
 const SkeletonImage: React.FC<SkeletonImageProps> = ({ width, height, className = '' }) => (
   <div className={`${width} ${height} ${className} bg-gray-700 rounded animate-pulse`}></div>

@@ -21,7 +21,7 @@ export const HoverEffect = ({
   return (
     <div
       className={cn(
-        "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-6", // Add gap for spacing
+        "grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3  py-10", // Add gap for spacing
         className
       )}
     >
@@ -72,12 +72,12 @@ export const Card = ({
   return (
     <div
       className={cn(
-        "rounded-2xl h-full w-full p-0 overflow-hidden bg-black border border-white/[0.2] group-hover:border-slate-700 relative z-20", // Increased padding
+        "rounded-2xl h-full w-full p-2 overflow-hidden bg-black border border-white/[0.2] group-hover:border-slate-700 relative z-20", // Increased padding
         className
       )}
     >
       <div className="relative z-50">
-        <div className="p-4">{children}</div>
+        <div className="p-6">{children}</div>
       </div>
     </div>
   );
@@ -91,7 +91,7 @@ export const CardTitle = ({
   children: React.ReactNode;
 }) => {
   return (
-    <h4 className={cn("text-zinc-100 font-bold tracking-wide mt-4", className)}>
+    <h4 className={cn("text-zinc-100 font-bold tracking-wide m-4", className)}>
       {children}
     </h4>
   );
