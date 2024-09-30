@@ -24,16 +24,17 @@ model User {
   watchlist     Watchlist[]
 }
 
+
+
 // Movie model
 model Movie {
-  id            Int      @id @default(autoincrement())
+  ttid          String      @id 
   title         String
-  slug          String   @unique
   posterUrl     String
   releaseYear   String
   description   String?
   genre         String?
-  cast          String?
+  cast          Json?    // Changed to store cast as JSON
   ratings       Rating[]
   reviews       Review[]
   createdAt     DateTime @default(now())
@@ -47,12 +48,12 @@ model Movie {
 model Rating {
   id        Int    @id @default(autoincrement())
   userId    Int
-  movieId   Int
+  movieId   String
   rating    Int    // e.g., 1-5 stars
   createdAt DateTime @default(now())
 
   user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  movie     Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  movie     Movie  @relation(fields: [movieId], references: [ttid], onDelete: Cascade)
 
   @@unique([userId, movieId]) // A user can rate a movie only once
 }
@@ -61,24 +62,24 @@ model Rating {
 model Review {
   id        Int    @id @default(autoincrement())
   userId    Int
-  movieId   Int
+  movieId   String
   content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  movie     Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  movie     Movie  @relation(fields: [movieId], references: [ttid], onDelete: Cascade)
 }
 
 // Watchlist model
 model Watchlist {
   id        Int    @id @default(autoincrement())
   userId    Int
-  movieId   Int
+  movieId   String
   createdAt DateTime @default(now())
 
   user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  movie   Movie   @relation("UserWatchlist", fields: [movieId], references: [id]) // Relation to Movie
+  movie   Movie   @relation("UserWatchlist", fields: [movieId], references: [ttid]) // Relation to Movie
 
   @@unique([userId, movieId]) // A user can add a movie to their watchlist only once
 }

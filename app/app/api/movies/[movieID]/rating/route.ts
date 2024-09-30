@@ -1,7 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import { prismaClient } from '@/app/lib/db'; 
 import { NextRequest, NextResponse } from 'next/server';
 
-const prisma = new PrismaClient();
 
 // POST endpoint to add a rating for a movie
 export async function POST(req: NextRequest, { params }: { params: { movieId: string } }) {
@@ -10,8 +9,8 @@ export async function POST(req: NextRequest, { params }: { params: { movieId: st
         const { userId, rating } = await req.json(); // Get userId and rating from request body
 
         // Check if movie exists
-        const movie = await prisma.movie.findUnique({
-            where: { id: parseInt(movieId) },
+        const movie = await prismaClient.movie.findUnique({
+            where: { ttid: (movieId) },
         });
 
         if (!movie) {
@@ -19,11 +18,11 @@ export async function POST(req: NextRequest, { params }: { params: { movieId: st
         }
 
         // Check if the user already rated this movie
-        const existingRating = await prisma.rating.findUnique({
+        const existingRating = await prismaClient.rating.findUnique({
             where: {
                 userId_movieId: {
                     userId,
-                    movieId: parseInt(movieId),
+                    movieId: (movieId),
                 },
             },
         });
@@ -33,10 +32,10 @@ export async function POST(req: NextRequest, { params }: { params: { movieId: st
         }
 
         // Create a new rating
-        const newRating = await prisma.rating.create({
+        const newRating = await prismaClient.rating.create({
             data: {
                 userId,
-                movieId: parseInt(movieId),
+                movieId: (movieId),
                 rating,
             },
         });
@@ -54,8 +53,8 @@ export async function GET(req: NextRequest, { params }: { params: { movieId: str
         const { movieId } = params; // Extract movieId from URL params
 
         // Check if movie exists
-        const movie = await prisma.movie.findUnique({
-            where: { id: parseInt(movieId) },
+        const movie = await prismaClient.movie.findUnique({
+            where: { ttid: (movieId) },
         });
 
         if (!movie) {
@@ -63,8 +62,8 @@ export async function GET(req: NextRequest, { params }: { params: { movieId: str
         }
 
         // Fetch ratings for the movie, including user details
-        const ratings = await prisma.rating.findMany({
-            where: { movieId: parseInt(movieId) },
+        const ratings = await prismaClient.rating.findMany({
+            where: { movieId: (movieId) },
             include: {
                 user: {
                     select: { id: true, name: true, profilePicture: true }, // Include user details
