@@ -1,7 +1,7 @@
-import { PrismaClient } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
+import { prismaClient } from '@/app/lib/db';
 
-const prisma = new PrismaClient();
+
 
 // POST endpoint to add a movie to the user's watchlist
 export async function POST(req: NextRequest) {
@@ -9,8 +9,8 @@ export async function POST(req: NextRequest) {
 
     try {
         // Check if the movie exists in the database
-        const movie = await prisma.movie.findUnique({
-            where: { id: movieId },
+        const movie = await prismaClient.movie.findUnique({
+            where: { ttid: movieId },
         });
 
         if (!movie) {
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
         }
 
         // Add the movie to the user's watchlist
-        const watchlistEntry = await prisma.watchlist.create({
+        const watchlistEntry = await prismaClient.watchlist.create({
             data: {
                 userId,
                 movieId,
@@ -39,7 +39,7 @@ export async function GET(req: NextRequest, { params }: { params: { userId: stri
 
     try {
         // Fetch the user's watchlist from the database
-        const watchlist = await prisma.watchlist.findMany({
+        const watchlist = await prismaClient.watchlist.findMany({
             where: { userId: parseInt(userId) },
             include: {
                 movie: true, // This will fetch movie details along with the watchlist entry
