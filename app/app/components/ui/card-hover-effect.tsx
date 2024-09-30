@@ -10,7 +10,7 @@ export const HoverEffect = ({
   movies: {
     title: string;
     releaseYear: string;
-    cast:string | null;
+    cast: string | null;
     link: string;
     posterUrl: string; // Add posterUrl for movie image
   }[];
@@ -53,8 +53,12 @@ export const HoverEffect = ({
           <Card>
             <CardImage src={movie.posterUrl} alt={movie.title} />
             <CardTitle>{movie.title}</CardTitle>
-            <CardDescription>{"Cast : "+movie.cast} <br /> {/* Cast on the first line */}
-            {"Release Year : "+movie.releaseYear}</CardDescription>
+            <CardDescription>
+              {movie.cast ? `Cast : ${movie.cast}` : "Cast : No info"} <br />
+              {movie.releaseYear
+                ? `Release Year : ${movie.releaseYear}`
+                : "Release Year : No info"}
+            </CardDescription>
           </Card>
         </Link>
       ))}
@@ -117,13 +121,7 @@ export const CardDescription = ({
 };
 
 // New component for the card image
-export const CardImage = ({
-  src,
-  alt,
-}: {
-  src: string;
-  alt: string;
-}) => {
+export const CardImage = ({ src, alt }: { src: string; alt: string }) => {
   return (
     <img
       src={src}

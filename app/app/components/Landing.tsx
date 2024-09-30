@@ -46,8 +46,8 @@ export function Landing() {
           <p className="text-white text-sm md:text-2xl max-w-xl mt-6 text-center my-3">
             Personalized recommendations powered by AI
           </p>
-          <br/>
-          <br/>
+          <br />
+          <br />
           <PlaceholdersAndVanishInput
             placeholders={placeholders}
             onChange={handleChange}
@@ -57,17 +57,19 @@ export function Landing() {
       </section>
 
       {/* Top Rated Movies */}
-      <section className=" w-full rounded-md bg-neutral-950 relative flex flex-col items-center justify-center antialiased">
+      <section
+        className="w-full rounded-md bg-neutral-950 relative flex flex-col items-center justify-center antialiased"
+      >
         <div className="max-w-5xl mx-auto px-8">
-          <h2 className="text-3xl font-bold m-8">Top Rated Movies</h2>
+          <h2 className="text-3xl font-bold m-8 text-center">Top Rated Movies</h2>
           <HoverEffect movies={topRatedMovies} />
         </div>
       </section>
 
       {/* Recent Movies */}
-      <section className=" w-full rounded-md bg-neutral-950 relative flex flex-col items-center justify-center antialiased">
+      <section className=" w-full rounded-md bg-zinc-900 relative flex flex-col items-center justify-center antialiased">
         <div className="max-w-5xl mx-auto px-8">
-          <h2 className="text-3xl font-bold mb-">Recent Movies</h2>
+          <h2 className="text-3xl font-bold m-8 text-center">Recent Release</h2>
           <HoverEffect movies={recentMovies} />
         </div>
       </section>
@@ -75,7 +77,7 @@ export function Landing() {
       {/* Personalised Recomendations */}
       <section className=" w-full rounded-md bg-neutral-950 relative flex flex-col items-center justify-center antialiased">
         <div className="max-w-5xl mx-auto px-8">
-          <h2 className="text-3xl font-bold mb-">
+          <h2 className="text-3xl font-bold m-8 text-center">
             Personalised Recomendations
           </h2>
           <HoverEffect movies={recentMovies} />

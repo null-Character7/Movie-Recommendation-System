@@ -28,18 +28,18 @@ interface Movie {
   rating: number;
 }
 
-  // Skeleton loader components
-  interface SkeletonTextProps {
-    width?: string;
-    height?: string;
-    className?: string; // Add className as an optional property
-  }
+// Skeleton loader components
+interface SkeletonTextProps {
+  width?: string;
+  height?: string;
+  className?: string; // Add className as an optional property
+}
 
-  interface SkeletonImageProps {
-    width: string;
-    height: string;
-    className?: string; // className is optional
-  }
+interface SkeletonImageProps {
+  width: string;
+  height: string;
+  className?: string; // className is optional
+}
 
 export function Movie({ moviename }: MovieProps) {
   const [userRating, setUserRating] = useState(0);
@@ -48,21 +48,29 @@ export function Movie({ moviename }: MovieProps) {
   const [cast, setCast] = useState<Cast[] | null>(null);
   const [genres, setGenres] = useState<string | null>(null);
 
+  const SkeletonText: React.FC<SkeletonTextProps> = ({
+    width = "w-full",
+    height = "h-4",
+    className = "",
+  }) => (
+    <div
+      className={`${width} ${height} ${className} bg-gray-700 rounded animate-pulse`}
+    ></div>
+  );
 
+  const SkeletonImage: React.FC<SkeletonImageProps> = ({
+    width,
+    height,
+    className = "",
+  }) => (
+    <div
+      className={`${width} ${height} ${className} bg-gray-700 rounded animate-pulse`}
+    ></div>
+  );
 
-const SkeletonText: React.FC<SkeletonTextProps> = ({ width = 'w-full', height = 'h-4', className = '' }) => (
-  <div className={`${width} ${height} ${className} bg-gray-700 rounded animate-pulse`}></div>
-);
-
-
-
-const SkeletonImage: React.FC<SkeletonImageProps> = ({ width, height, className = '' }) => (
-  <div className={`${width} ${height} ${className} bg-gray-700 rounded animate-pulse`}></div>
-);
-
-const SkeletonButton: React.FC = () => (
-  <div className="w-40 h-10 bg-gray-700 rounded animate-pulse"></div>
-);
+  const SkeletonButton: React.FC = () => (
+    <div className="w-40 h-10 bg-gray-700 rounded animate-pulse"></div>
+  );
 
   console.log("movie name in slug in component ", moviename);
 
@@ -236,7 +244,7 @@ const SkeletonButton: React.FC = () => (
           </section>
 
           {/* Movie Details */}
-          <section className="py-12">
+          <section className="py-12 bg-zinc-800">
             <div className="container mx-auto px-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="md:col-span-2">
@@ -244,17 +252,14 @@ const SkeletonButton: React.FC = () => (
                   <p className="text-lg mb-8">{movie?.overview}</p>
 
                   <h2 className="text-3xl font-bold mb-4">Cast & Crew</h2>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 mb-8">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 m-8">
                     {cast?.map((member) => (
                       <div className="text-center group" key={member.name}>
-                        <Avatar className="w-24 h-24 mx-auto mb-2 group-hover:ring-2 group-hover:ring-purple-500 transition-all">
+                        <Avatar className="w-30 h-30 mx-auto mb-2 group-hover:ring-2 group-hover:ring-purple-500 transition-all">
                           <AvatarImage
                             src={member.image} // Using the actual image URL from the API
                             alt={member.name} // Alt text for better accessibility
                           />
-                          <AvatarFallback>
-                            {member.name.charAt(0)}
-                          </AvatarFallback>
                         </Avatar>
                         <p className="font-semibold group-hover:text-purple-400 transition-colors">
                           {member.name} {/* Display the actor's name */}
@@ -307,7 +312,9 @@ const SkeletonButton: React.FC = () => (
           {/* Similar Movies */}
           <section className="w-full rounded-md bg-zinc-900 relative flex flex-col items-center justify-center antialiased">
             <div className="max-w-5xl mx-auto px-8">
-              <h2 className="text-3xl font-bold mb-8 p-4">Similar Movies</h2>
+              <h2 className="text-3xl font-bold  p-4 text-center">
+                Similar Movies
+              </h2>
               <HoverEffect movies={movies} />
             </div>
           </section>
