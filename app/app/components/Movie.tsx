@@ -46,7 +46,8 @@ export function Movie({ moviename }: MovieProps) {
   const [userReview, setUserReview] = useState("");
   const [movie, setMovie] = useState<Movie | null>(null);
   const [cast, setCast] = useState<Cast[] | null>(null);
-  const [genres, setGenres] = useState<string | null>(null);
+  const [genre, setGenre] = useState<string | null>(null);
+  const [ttId, setTtId] = useState<string>("");
 
   const SkeletonText: React.FC<SkeletonTextProps> = ({
     width = "w-full",
@@ -72,6 +73,86 @@ export function Movie({ moviename }: MovieProps) {
     <div className="w-40 h-10 bg-gray-700 rounded animate-pulse"></div>
   );
 
+  const submitRating = async (userId: string, movieId: string, rating: number) => {
+    try {
+      const response = await fetch(`/api/movies/${movieId}/rating`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId,
+          rating,
+        }), // Pass userId and rating in the request body
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit rating');
+      }
+  
+      const data = await response.json();
+      console.log('Rating submitted successfully:', data);
+    } catch (error) {
+      console.error('Error submitting rating:');
+    }
+  };
+  const submitReview = async (userId: string, movieId: string, content: string) => {
+    try {
+      const response = await fetch(`/api/movies/${movieId}/review`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId,
+          content, // Pass userId and content in the request body
+        }),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit review');
+      }
+  
+      const data = await response.json();
+      console.log('Review submitted successfully:', data);
+    } catch (error) {
+      console.error('Error submitting review:', error);
+    }
+  };
+
+  const reviewHandler = async () => {
+    submitRating('11',ttId,userRating);
+    submitReview('11',ttId,userReview)
+  }
+
+  const addWatchLater = async () => {
+    const postData = {
+      userId: "11",
+      movieId: ttId,
+    };
+
+    try {
+      const response = await fetch("/api/watchlist", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData), // Sending the data in the request body
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add movie to watchlist");
+      }
+
+      const data = await response.json();
+      console.log("Added to watchlist:", data);
+    } catch (error) {
+      console.error("Error adding to watchlist:", error);
+    }
+  };
+
   console.log("movie name in slug in component ", moviename);
 
   const movieName = convertFromSlug(moviename);
@@ -95,6 +176,7 @@ export function Movie({ moviename }: MovieProps) {
         console.log(result);
         const ttid = result.data.mainSearch.edges[0].node.entity.id;
         console.log("titty id ", ttid);
+        setTtId(ttid);
 
         return ttid; // Return ttid after fetching it
       } catch (error) {
@@ -182,7 +264,7 @@ export function Movie({ moviename }: MovieProps) {
         const response = await fetch(url, options);
         const result = await response.json();
         const genres = result.data.title.titleGenres.genres;
-        setGenres(genres.map((genreObj: any) => genreObj.genre.text)); // Mapping the `text` field
+        setGenre(genres.map((genreObj: any) => genreObj.genre.text)); // Mapping the `text` field
         console.log("genre is ", genres);
       } catch (error) {
         console.error(error);
@@ -197,15 +279,79 @@ export function Movie({ moviename }: MovieProps) {
         await fetchCast(ttid);
         await fetchGenres(ttid);
       }
+      const postData = {
+        ttid: ttid,
+        title: movie?.title,
+        posterUrl: movie?.posterUrl,
+        releaseYear: movie?.releaseYear,
+        overview: movie?.overview,
+        cast: cast,
+        genres: genre,
+      };
+      console.log("data from frontend ", postData);
+      try {
+        const response = await fetch("/api/movies", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(postData),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to store movie information");
+        }
+
+        const data = await response.json();
+        console.log("Movie info stored:", data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
     };
 
     fetchData(); // Call the main function when the component is mounted
   }, [movieName]); // Add movieName as a dependency to refetch when it changes
-  // Empty dependency array to run the effect only once
+  // Second useEffect to handle the POST request after state updates
+  useEffect(() => {
+    if (movie && cast && genre) {
+      const postData = {
+        ttid: ttId,
+        title: movie.title,
+        posterUrl: movie.posterUrl,
+        releaseYear: movie.releaseYear,
+        overview: movie.overview,
+        cast: cast, // already formatted
+        genres: genre, // already formatted
+      };
+
+      const postMovieData = async () => {
+        try {
+          const response = await fetch("/api/movies", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(postData),
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to store movie information");
+          }
+
+          const data = await response.json();
+          console.log("Movie info stored:", data);
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      };
+
+      postMovieData();
+    }
+  }, [genre]); // Dependency array ensures this runs after state updates
   return (
     <div className="min-h-screen bg-zinc-900 text-gray-100">
       {/* Conditional Rendering */}
-      {movie && genres && cast ? (
+      {movie && genre && cast ? (
         <>
           {/* Movie Hero Section */}
           <section className="relative h-[70vh] overflow-hidden">
@@ -225,11 +371,14 @@ export function Movie({ moviename }: MovieProps) {
                 <h1 className="text-5xl font-bold mb-4">{movie?.title}</h1>
                 <p className="text-xl mb-4">
                   {movie?.releaseYear && `${movie.releaseYear}   |   `}
-                  {genres && `${genres}   |   `}
+                  {genre && `${genre}   |   `}
                   {movie?.rating && `Rating: ${movie.rating}`}
                 </p>
                 <div className="flex items-center space-x-4">
-                  <Button className="bg-purple-600 hover:bg-purple-700 transition-colors">
+                  <Button
+                    className="bg-purple-600 hover:bg-purple-700 transition-colors"
+                    onClick={addWatchLater}
+                  >
                     <PlusCircle className="mr-2 h-4 w-4" /> Add to Watchlist
                   </Button>
                   <Button
@@ -299,7 +448,7 @@ export function Movie({ moviename }: MovieProps) {
                         onChange={(e) => setUserReview(e.target.value)}
                         className="mb-4 text-white"
                       />
-                      <Button className="w-full bg-purple-600 hover:bg-purple-700 transition-colors">
+                      <Button className="w-full bg-purple-600 hover:bg-purple-700 transition-colors" onClick={reviewHandler}>
                         Submit Review
                       </Button>
                     </CardContent>

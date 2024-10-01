@@ -12,7 +12,7 @@ export async function POST(req: NextRequest, { params }: { params: { movieId: st
 
         // Check if the movie exists
         const movie = await prisma.movie.findUnique({
-            where: { id: parseInt(movieId) },
+            where: { ttid: (movieId) },
         });
 
         if (!movie) {
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest, { params }: { params: { movieId: st
         const review = await prisma.review.create({
             data: {
                 content,
-                movieId: parseInt(movieId),
+                movieId: (movieId),
                 userId,
             },
         });
@@ -42,7 +42,7 @@ export async function GET(req: NextRequest, { params }: { params: { movieId: str
 
         // Check if the movie exists
         const movie = await prisma.movie.findUnique({
-            where: { id: parseInt(movieId) },
+            where: { ttid: (movieId) },
         });
 
         if (!movie) {
@@ -51,7 +51,7 @@ export async function GET(req: NextRequest, { params }: { params: { movieId: str
 
         // Fetch reviews for the movie, including user details
         const reviews = await prisma.review.findMany({
-            where: { movieId: parseInt(movieId) },
+            where: { movieId: (movieId) },
             include: {
                 user: {
                     select: { id: true, name: true, profilePicture: true }, // Include user details in response

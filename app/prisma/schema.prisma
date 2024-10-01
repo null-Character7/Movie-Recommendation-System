@@ -30,9 +30,9 @@ model Movie {
   ttid          String      @id 
   title         String
   posterUrl     String
-  releaseYear   String
+  releaseYear   Int?
   description   String?
-  genre         String?
+  genre         String[]
   cast          Json?    // Changed to store cast as JSON
   ratings       Rating[]
   reviews       Review[]

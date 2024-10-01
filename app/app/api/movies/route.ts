@@ -13,16 +13,18 @@ interface Movie {
   ttid: string;
   title: string;
   posterUrl: string;
-  releaseYear: string;
+  releaseYear: number;
   overview: string;
-  rating: number;
+  genres:string[];
   cast: Cast[];
 }
 
 // POST API to add a movie if it doesn't exist
 export async function POST(req: NextRequest) {
   try {
-    const { ttid, title, posterUrl, releaseYear, overview, rating, cast }: Movie = await req.json();
+    const { ttid, title, posterUrl, releaseYear, overview, cast, genres }: Movie = await req.json();
+    console.log("cast is ",cast)
+    console.log("genres are ",genres)
 
     // Check if the movie already exists
     const existingMovie = await prismaClient.movie.findUnique({
@@ -42,6 +44,7 @@ export async function POST(req: NextRequest) {
         posterUrl,
         releaseYear,
         description: overview,
+        genre: genres,
         cast: cast ? JSON.stringify(cast) : Prisma.DbNull, // Use Prisma.DbNull for null JSON values
       },
     });
