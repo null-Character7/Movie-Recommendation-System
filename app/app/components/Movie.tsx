@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 import { convertFromSlug } from "../utils/movie-name";
 import { HoverEffect } from "./ui/card-hover-effect";
+import { AnimatedTooltip } from "./ui/animated-tooltip";
 
 interface MovieProps {
   moviename: string;
@@ -401,25 +402,9 @@ export function Movie({ moviename }: MovieProps) {
                   <p className="text-lg mb-8">{movie?.overview}</p>
 
                   <h2 className="text-3xl font-bold mb-4">Cast & Crew</h2>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 m-8">
-                    {cast?.map((member) => (
-                      <div className="text-center group" key={member.name}>
-                        <Avatar className="w-30 h-30 mx-auto mb-2 group-hover:ring-2 group-hover:ring-purple-500 transition-all">
-                          <AvatarImage
-                            src={member.image} // Using the actual image URL from the API
-                            alt={member.name} // Alt text for better accessibility
-                          />
-                        </Avatar>
-                        <p className="font-semibold group-hover:text-purple-400 transition-colors">
-                          {member.name} {/* Display the actor's name */}
-                        </p>
-                        <p className="text-sm text-gray-400">
-                          {member.character || "Unknown"}{" "}
-                          {/* Display the character name */}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+                  <div className="flex flex-row items-center justify-center mb-10 w-full">
+      <AnimatedTooltip items={cast} />
+    </div>
 
                   <h2 className="text-3xl font-bold mb-4">Write a Review</h2>
                   <Card className="bg-zinc-900">
