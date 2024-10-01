@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,27 +9,70 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Edit, Star, Clock, X } from 'lucide-react'
 import Image from 'next/image'
+import { useSession } from 'next-auth/react'
+
+type WatchLaterMovie = {
+  id: string;
+  title: string;
+  poster: string;
+};
+
+type MovieRating = {
+  id: string;
+  title: string;
+  poster: string;
+  rating: number;
+};
 
 export function Profile() {
+  const { data: session, status } = useSession();
+  const userId=session?.user.id;
   const [isEditing, setIsEditing] = useState(false)
   const [name, setName] = useState('John Doe')
   const [email, setEmail] = useState('john.doe@example.com')
-  const [watchLaterMovies, setWatchLaterMovies] = useState([
-    { id: 1, title: 'Inception', poster: '/placeholder.svg?height=300&width=200&text=Inception' },
-    { id: 2, title: 'The Matrix', poster: '/placeholder.svg?height=300&width=200&text=The+Matrix' },
-    { id: 3, title: 'Interstellar', poster: '/placeholder.svg?height=300&width=200&text=Interstellar' },
-  ])
-  const [ratedMovies, setRatedMovies] = useState([
-    { id: 1, title: 'The Shawshank Redemption', poster: '/placeholder.svg?height=300&width=200&text=Shawshank', rating: 5 },
-    { id: 2, title: 'Pulp Fiction', poster: '/placeholder.svg?height=300&width=200&text=Pulp+Fiction', rating: 4 },
-    { id: 3, title: 'The Dark Knight', poster: '/placeholder.svg?height=300&width=200&text=Dark+Knight', rating: 5 },
-  ])
+  const fetchWatchlist = async () => {
+    try {
+      // Fetch the watchlist using the userId
+      const response = await fetch(`/api/watchlist/${userId}`);
+      if (!response.ok) throw new Error('Failed to fetch watchlist');
 
-  const removeWatchLaterMovie = (id: number) => {
+      const data = await response.json();
+
+      // Map the API response to match the desired structure
+      const formattedData = data.map((entry: any) => ({
+        id: entry.movie.ttid,        // Assuming movie object has an id
+        title: entry.movie.title,  // Assuming movie object has a title
+        poster: entry.movie.posterUrl || '../../public/user.png', // Fallback to placeholder image
+      }));
+
+      setWatchLaterMovies(formattedData);
+    } catch (error) {
+      console.error('Error fetching watchlist:', error);
+    }
+  };
+  useEffect(() => {
+    if (userId) {
+      fetchWatchlist();
+      fetchMovieRatings();
+    }
+  }, [userId]);
+  const fetchMovieRatings = async () => {
+    try {
+      const response = await fetch(`/api/rating/${userId}`);
+      const data = await response.json();
+      setRatedMovies(data);
+    } catch (error) {
+      console.error('Error fetching ratings:', error);
+    }
+  }
+  const [watchLaterMovies, setWatchLaterMovies] = useState<WatchLaterMovie[]>([])
+  const [ratedMovies, setRatedMovies] = useState<MovieRating[]>([])
+
+  const removeWatchLaterMovie = (id: string) => {
     setWatchLaterMovies(watchLaterMovies.filter(movie => movie.id !== id))
   }
 
-  const editRating = (id: number, newRating: number) => {
+  const editRating = (id: string, newRating: number) => {
     setRatedMovies(ratedMovies.map(movie => 
       movie.id === id ? { ...movie, rating: newRating } : movie
     ))

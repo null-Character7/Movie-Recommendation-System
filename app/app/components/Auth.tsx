@@ -33,8 +33,7 @@ export function Auth() {
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage:
-            "url('./movie_bg.jpg')",
+          backgroundImage: "url('./movie_bg.jpg')",
           filter: "brightness(0.6) contrast(1.2)",
         }}
       ></div>
@@ -176,7 +175,7 @@ export function Auth() {
                 <Button
                   variant="outline"
                   className="w-full border-gray-600 text-white hover:bg-white hover:bg-opacity-10 transition-colors duration-300"
-                  onClick={() =>signIn("google")}
+                  onClick={() => signIn("google")}
                 >
                   <FaGoogle className="mr-2" />
                   Sign in with Google

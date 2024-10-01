@@ -57,11 +57,11 @@ export function Landing() {
       </section>
 
       {/* Top Rated Movies */}
-      <section
-        className="w-full rounded-md bg-neutral-950 relative flex flex-col items-center justify-center antialiased"
-      >
+      <section className="w-full rounded-md bg-neutral-950 relative flex flex-col items-center justify-center antialiased">
         <div className="max-w-5xl mx-auto px-8">
-          <h2 className="text-3xl font-bold m-8 text-center">Top Rated Movies</h2>
+          <h2 className="text-3xl font-bold m-8 text-center">
+            Top Rated Movies
+          </h2>
           <HoverEffect movies={topRatedMovies} />
         </div>
       </section>
