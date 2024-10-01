@@ -12,7 +12,7 @@ generator client {
 
 // User model
 model User {
-  id            Int      @id @default(autoincrement())
+  id            String          @id @default(uuid())
   email         String   @unique
   name          String?
   profilePicture String?
@@ -46,7 +46,7 @@ model Movie {
 // Rating model
 model Rating {
   id        Int    @id @default(autoincrement())
-  userId    Int
+  userId    String
   movieId   String
   rating    Int    // e.g., 1-5 stars
   createdAt DateTime @default(now())
@@ -60,7 +60,7 @@ model Rating {
 // Review model
 model Review {
   id        Int    @id @default(autoincrement())
-  userId    Int
+  userId    String
   movieId   String
   content   String
   createdAt DateTime @default(now())
@@ -73,7 +73,7 @@ model Review {
 // Watchlist model
 model Watchlist {
   id        Int    @id @default(autoincrement())
-  userId    Int
+  userId    String
   movieId   String
   createdAt DateTime @default(now())
 

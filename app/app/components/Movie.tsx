@@ -10,6 +10,8 @@ import Image from "next/image";
 import { convertFromSlug } from "../utils/movie-name";
 import { HoverEffect } from "./ui/card-hover-effect";
 import { AnimatedTooltip } from "./ui/animated-tooltip";
+import { useSession } from "next-auth/react";
+
 
 interface MovieProps {
   moviename: string;
@@ -43,6 +45,7 @@ interface SkeletonImageProps {
 }
 
 export function Movie({ moviename }: MovieProps) {
+  const { data: session, status } = useSession();
   const [userRating, setUserRating] = useState(0);
   const [userReview, setUserReview] = useState("");
   const [movie, setMovie] = useState<Movie | null>(null);
@@ -124,13 +127,13 @@ export function Movie({ moviename }: MovieProps) {
   };
 
   const reviewHandler = async () => {
-    submitRating('11',ttId,userRating);
-    submitReview('11',ttId,userReview)
+    submitRating(session?.user.id ?? "",ttId,userRating);
+    submitReview(session?.user.id ?? "",ttId,userReview)
   }
 
   const addWatchLater = async () => {
     const postData = {
-      userId: "11",
+      userId: session?.user.id,
       movieId: ttId,
     };
 

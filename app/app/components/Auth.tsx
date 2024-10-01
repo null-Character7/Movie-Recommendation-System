@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FaGoogle } from "react-icons/fa";
+import { signIn } from "next-auth/react";
 
 export function Auth() {
   const [isLoading, setIsLoading] = useState(false);
@@ -175,6 +176,7 @@ export function Auth() {
                 <Button
                   variant="outline"
                   className="w-full border-gray-600 text-white hover:bg-white hover:bg-opacity-10 transition-colors duration-300"
+                  onClick={() =>signIn("google")}
                 >
                   <FaGoogle className="mr-2" />
                   Sign in with Google
