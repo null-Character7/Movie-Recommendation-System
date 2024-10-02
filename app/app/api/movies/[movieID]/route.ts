@@ -5,7 +5,7 @@ const BASE_URL = 'http://localhost:8000/api/movies/';
 
 export async function GET(req: NextRequest, { params }: { params: { movieId: string } }) {
   const { movieId } = params;
-
+ 
   try {
     const res = await fetch(`${BASE_URL}${movieId}/similar`, {
       method: 'GET',

@@ -10,11 +10,27 @@ import {
   BookmarkCheck,
   Sparkles,
   User,
+  LogIn,
+  Router,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
 
 export function Header() {
-  const route = useRouter();
+  const router = useRouter();
+
+  const { data: session } = useSession();
+  console.log("session is ",session)
+  const handleClick = () => {
+    if (session) {
+      // Sign the user out if they are logged in
+      signOut();
+    } else {
+      // Redirect to the /auth page if the user is not logged in
+      router.push("/auth");
+    }
+  };
+
   return (
     <header className="bg-zinc-950 border-b border-zinc-800">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -65,7 +81,7 @@ export function Header() {
             variant="ghost"
             size="icon"
             className="rounded-full hover:bg-gray-800 transition-all duration-200"
-            onClick={() => route.push("/profile")}
+            onClick={() => router.push("/profile")}
           >
             <Avatar className="h-8 w-8 transition-transform hover:scale-110">
               <AvatarImage src="https://github.com/shadcn.png" />
@@ -74,9 +90,21 @@ export function Header() {
               </AvatarFallback>
             </Avatar>
           </Button>
-          <Button size="icon" className="bg-white hover:bg-black">
-            <LogOut className="h-5 w-5 text-black hover:text-white" />
-          </Button>
+          <Button
+      size="icon"
+      className="bg-black text-white"
+      onClick={handleClick}
+    >
+      {session ? (
+        <>
+          <LogOut className="h-5 w-5 text-white" />
+        </>
+      ) : (
+        <>
+          <LogIn className="h-5 w-5 text-white" />
+        </>
+      )}
+    </Button>
         </nav>
       </div>
     </header>

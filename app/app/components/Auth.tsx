@@ -175,7 +175,7 @@ export function Auth() {
                 <Button
                   variant="outline"
                   className="w-full border-gray-600 text-white hover:bg-white hover:bg-opacity-10 transition-colors duration-300"
-                  onClick={() => signIn("google")}
+                  onClick={() => signIn("google", { callbackUrl: "/" })}
                 >
                   <FaGoogle className="mr-2" />
                   Sign in with Google
