@@ -44,7 +44,7 @@ export function Header() {
             </span>
           </Link>
           <Link
-            href="/my-watchlist"
+            href="/watchlist"
             className="group p-2 rounded-lg hover:bg-gray-800 transition-all duration-200"
           >
             <BookmarkCheck className="h-5 w-5 text-gray-400 group-hover:text-purple-400 transition-colors" />
